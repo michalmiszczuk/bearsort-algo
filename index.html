@@ -12,16 +12,25 @@
         <h1 class="title">Bear Sort Algorithm</h1>
         <div class="options">
             <form>
-                <label for="array-length">Choose the length of the array</label>
-                <input type="number" id="arrayLength">
+                <label for="array-length">Choose the length of the array </br> (max: 50,000)</label>
+                <input inputmode="numeric" type="number" max="50000" id="arrayLength">
                 <label for="range-numbers">Choose the the range of numbers</label>
-                <input type="number" id="rangeNumbers">
+                <input inputmode="numeric" type="number" id="rangeNumbers">
                 <button id="generateButton">Generate</button>
             </form>
+        <div class="time-elapsed">Time elapsed:</div>
         </div>
         <h2 class="input">Generated Array:</h2>
         <button id="sortButton">SORT ME</button>
         <h2 class="output">Sorted Array:</h2>
+    </div>
+    <div class="spinner-wrapper spinner-hidden">
+        <div class="spinner">
+            <div class="spinner-text">sorting...</div>
+            <div class="spinner-section spinner-one"></div>
+            <div class="spinner-section spinner-two"></div>
+            <div class="spinner-section spinner-three"></div>
+        </div>
     </div>
     <script src="script.js" ></script>
 </body>

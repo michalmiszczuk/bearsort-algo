@@ -9,18 +9,13 @@ function bearSort(array) {
   if (array[0] < result[0]) result.unshift(array[0]);
   array.shift();
 
-  let i = 0;
-  let indexArray = [0];
+
   for (let number of array) {
-    i++;
-    indexArray.push(i);
+   
     if (number >= result[i]) result.push(number);
     if (number <= result[0]) result.unshift(number);
     if (result[0] < number && number < result[i]) {
-      console.log("THIS", number);
-      let testArray = result.slice(0);
-      let testIndexArr = indexArray.slice(0);
-      let [index] = binaryArrayDiv(testArray, testIndexArr, number);
+      let [index] = binaryArrayDiv(reuslt, number);
       let integerIndex = index.pop();
 
       result.splice(integerIndex, 0, number);
@@ -29,7 +24,7 @@ function bearSort(array) {
   return result;
 }
 
-function binaryArrayDiv(array, testArray, number) {
+function binaryArrayDiv(result, number) {
   if (array.length === 1) {
     return [testArray];
   }

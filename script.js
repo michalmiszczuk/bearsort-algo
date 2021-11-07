@@ -1,11 +1,12 @@
-let arrayLength = document.getElementById("arrayLength");
-let rangeNumbers = document.getElementById("rangeNumbers");
-let title = document.getElementsByClassName("title");
-let inputArray = document.querySelector(".input");
-let outputArray = document.querySelector(".output");
-let generateButton = document.getElementById("generateButton");
-let sortButton = document.getElementById("sortButton");
-let mainWrapper = document.querySelector(".main-wrapper");
+const arrayLength = document.getElementById("arrayLength");
+const rangeNumbers = document.getElementById("rangeNumbers");
+const title = document.getElementsByClassName("title");
+const inputArray = document.querySelector(".input");
+const outputArray = document.querySelector(".output");
+const generateButton = document.getElementById("generateButton");
+const sortButton = document.getElementById("sortButton");
+const mainWrapper = document.querySelector(".spinner-wrapper");
+const time = document.querySelector(".time-elapsed");
 
 let arrayToSort = [];
 
@@ -15,6 +16,7 @@ sortButton.addEventListener("click", sortArray);
 function generateArray(e) {
   e.preventDefault();
   if (!arrayLength.value || !rangeNumbers.value) return;
+  if (arrayLength.value > 50000) arrayLength.value = 50000;
   let generatedArray = Array.from({length: arrayLength.value}, () =>
     Math.floor(Math.random() * rangeNumbers.value)
   );
@@ -22,46 +24,45 @@ function generateArray(e) {
   arrayToSort = generatedArray;
 }
 
-async function sortArray() {
-  try {
-    mainWrapper.classList.add("main-wrapper-loading");
-    arrayCopy = [...arrayToSort];
-    const sortedArray = await bearSort(arrayCopy);
-    console.log(sortedArray);
+function sortArray() {
+  let timeStart = Date.now();
+  mainWrapper.classList.toggle("spinner-hidden");
+  arrayCopy = [...arrayToSort];
+  setTimeout(() => {
+    const sortedArray = bearSort(arrayCopy);
     outputArray.textContent = sortedArray;
-    if (sortArray.length === 0) mainWrapper.classList.remove("main-wrapper-loading");
-  } catch (error) {
-    console.log(error);
-  }
+    let timeFinish = Date.now();
+    let timeElapsed = (timeFinish - timeStart) / 1000;
+    mainWrapper.classList.toggle("spinner-hidden");
+    time.textContent = `Time elapsed: ${timeElapsed}s `;
+  }, 0);
 }
 
 function bearSort(array) {
-  return new Promise((resolve, reject) => {
-    let result = [];
-    result.push(array[0]);
-    array.shift();
-    if (array[0] >= result[0]) result.push(array[0]);
-    if (array[0] < result[0]) result.unshift(array[0]);
-    array.shift();
+  let result = [];
+  result.push(array[0]);
+  array.shift();
+  if (array[0] >= result[0]) result.push(array[0]);
+  if (array[0] < result[0]) result.unshift(array[0]);
+  array.shift();
 
-    let i = 0;
-    let indexArray = [0];
-    for (let number of array) {
-      i++;
-      indexArray.push(i);
-      if (number >= result[i]) result.push(number);
-      if (number <= result[0]) result.unshift(number);
-      if (result[0] < number && number < result[i]) {
-        let testArray = result.slice(0);
-        let testIndexArr = indexArray.slice(0);
-        let [index] = binaryArrayDiv(testArray, testIndexArr, number);
-        let integerIndex = index.pop();
+  let i = 0;
+  let indexArray = [0];
+  for (let number of array) {
+    i++;
+    indexArray.push(i);
+    if (number >= result[i]) result.push(number);
+    if (number <= result[0]) result.unshift(number);
+    if (result[0] < number && number < result[i]) {
+      let testArray = result.slice(0);
+      let testIndexArr = indexArray.slice(0);
+      let [index] = binaryArrayDiv(testArray, testIndexArr, number);
+      let integerIndex = index.pop();
 
-        result.splice(integerIndex, 0, number);
-      }
+      result.splice(integerIndex, 0, number);
     }
-    resolve(result);
-  });
+  }
+  return result;
 }
 
 function binaryArrayDiv(array, testArray, number) {
